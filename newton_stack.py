@@ -46,12 +46,12 @@ def run(code):
 		26: gen_op(lambda: "\n", 0),
 		27: gen_op(lambda: " ", 0)
 	}
-	for i in range(10):
-		commands[i] = (lambda n: lambda: stack.append(n))(Fraction(i))
 
 	for radicand, tolerance, base in code:
 		radicand, tolerance, base = Fraction(radicand), Fraction(tolerance), Fraction(base)
 		x=radicand
+
+		number = ""
 
 		while abs(x*x - radicand) > tolerance:
 			x-=(x**base-radicand)/(base*x**(base-1))
@@ -60,8 +60,15 @@ def run(code):
 			print(x)
 			print(command)
 
-			if command in commands:
-				commands[command]()
+			if command < 10:
+				number += str(command)
+			else:
+				if number:
+					stack.append(Fraction(int(number)))
+					number = []
+
+				if command in commands:
+					commands[command]()
 	print(stack)
 def main():
 	with open(sys.argv[1]) as source:
